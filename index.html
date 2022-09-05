@@ -1,974 +1,977 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style type="text/css">
+        ::-webkit-scrollbar {
+            width: 0;
+        }
+
+        body {
+            background-image: url(a.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+
+        div {
+            touch-action: none;
+        }
+
+        #tasky {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 60px;
+            width: 100%;
+            background-color: rgb(244, 66, 66);
+        }
+
+        #con {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .window {
+            height: 300px;
+            width: 300px;
+            overflow: hidden;
+            border-radius: 20px;
+            top: 80px;
+            left: calc(50% - 150px);
+            overflow-wrap: break-word;
+            outline: none;
+
+        }
+
+        .touch {
+            height: 25px;
+            width: 25px;
+            border-radius: 100%;
+            background-color: white;
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .d {
+            position: absolute;
+            height: 30px;
+            width: 30px;
+            background-color: red;
+            border-radius: 100%;
+            transform: translateX(-50%) translateY(-50%);
+
+        }
+
+        .shadow {
+            box-shadow: 0 5px 10px rgba(15, 10, 18, 0.1), 0 15px 40px rgba(16, 13, 20, 0.2);
+            background-color: rgba(255, 255, 255, 0.3);
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            transition-duration: 0.2s;
+            height: calc(50% - 30px);
+            width: 50%;
+            border-radius: 10px;
+        }
+
+        #add {
+            box-shadow: 0 5px 10px rgba(15, 10, 18, 0.2), 0 15px 40px rgba(16, 13, 20, 0.3);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            height: 40px;
+            width: 40px;
+            background-color: rgb(41, 103, 204);
+            border-radius: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            line-height: 30px;
+            color: white;
+        }
+
+        #delete {
+            box-shadow: 0 5px 10px rgba(15, 10, 18, 0.2), 0 15px 40px rgba(16, 13, 20, 0.3);
+            position: absolute;
+            top: 10px;
+            right: -50px;
+            height: 40px;
+            width: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 0 24 24' width='24px' fill='%23FFFFFF'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+            background-color: rgb(41, 103, 204);
+            border-radius: 100%;
+            transition-duration: 0.2s;
+            background-size: 70%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .bar {
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        #placeholderTasky {
+            height: 50px;
+            width: 50px;
+            background-color: transparent;
+            display: inline-block;
+        }
+
+        .windowTop {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            height: 50px;
+            width: 100%;
+            background-color: transparent;
+            border-top-right-radius: 10px;
+            border-top-left-radius: 10px;
+        }
+
+        .windowHeading {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            height: 30px;
+            width: calc(100% - 20px);
+            background-color: rgba(255, 255, 255, 1);
+            padding: 10px;
+            overflow-y: scroll;
+            font-weight: bold;
+            font-size: 25px;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
+        .windowContent {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            height: calc(100% - 125px);
+            width: calc(100% - 25px);
+            background-color: transparent;
+            margin: 10px;
+            overflow-y: scroll;
+            z-index: 2;
+            font-family: 'Montserrat', sans-serif;
+            outline-color: transparent;
+            border-color: transparent;
+        }
+
+        #bgDiv {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: rgba(255, 66, 66, 0.6);
+        }
+
+        #mainCon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+    </style>
 </head>
-<style type="text/css">
-	::-webkit-scrollbar {
-		width: 0;
-	}
 
-	body {
-		background-image: url(a.jpg);
-		background-size: cover;
-		background-position: center;
-	}
-
-	div {
-		touch-action: none;
-	}
-
-	#tasky{
-		position: absolute;
-		top: 0px;
-		left:0px;
-		height: 60px;
-		width:100%;
-		background-color: rgb(244, 66, 66);
-	}
-	#con{
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
-		overflow: hidden;
-		background-size: cover;
-		background-position: center;
-	}
-	.window {
-		height: 300px;
-		width: 300px;
-		overflow: hidden;
-		border-radius: 20px;
-		top: 80px;
-		left: calc(50% - 150px);
-		overflow-wrap: break-word;
-		outline: none;
-
-	}
-
-	.touch {
-		height: 25px;
-		width: 25px;
-		border-radius: 100%;
-		background-color: white;
-		position: absolute;
-		pointer-events: none;
-		opacity: 0;
-	}
-
-	.d {
-		position: absolute;
-		height: 30px;
-		width: 30px;
-		background-color: red;
-		border-radius: 100%;
-		transform: translateX(-50%) translateY(-50%);
-
-	}
-
-	.shadow {
-		box-shadow: 0 5px 10px rgba(15, 10, 18, 0.1), 0 15px 40px rgba(16, 13, 20, 0.2);
-		background-color: rgba(255, 255, 255, 0.3);
-		position: absolute;
-		pointer-events: none;
-		opacity: 0;
-		transition-duration: 0.2s;
-		height: calc(50% - 30px);
-		width: 50%;
-		border-radius: 10px;
-	}
-
-	#add {
-		box-shadow: 0 5px 10px rgba(15, 10, 18, 0.2), 0 15px 40px rgba(16, 13, 20, 0.3);
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		height: 40px;
-		width: 40px;
-		background-color: rgb(41, 103, 204);
-		border-radius: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		font-size: 30px;
-		line-height: 30px;
-		color: white;		
-	}
-
-	#delete {
-		box-shadow: 0 5px 10px rgba(15, 10, 18, 0.2), 0 15px 40px rgba(16, 13, 20, 0.3);
-		position: absolute;
-		top: 10px;
-		right: -50px;
-		height: 40px;
-		width: 40px;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 0 24 24' width='24px' fill='%23FFFFFF'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
-		background-color: rgb(41, 103, 204);
-		border-radius: 100%;
-		transition-duration: 0.2s;
-		background-size: 70%;
-		background-repeat: no-repeat;
-		background-position: center;
-	}
-
-	.bar {
-		outline: none;
-		font-family: 'Montserrat', sans-serif;
-	}
-
-	#placeholderTasky {
-		height: 50px;
-		width: 50px;
-		background-color: transparent;
-		display: inline-block;
-	}
-
-	.windowTop{
-		position: relative;
-		top: 0px;
-		left:0px;
-		height: 50px;
-		width:100%;
-		background-color: transparent;
-		border-top-right-radius: 10px;
-		border-top-left-radius: 10px;
-	}
-
-	.windowHeading{
-		position: relative;
-		top: 0px;
-		left:0px;
-		height: 30px;
-		width:calc(100% - 20px);
-		background-color: rgba(255,255,255,1);
-		padding: 10px;
-		overflow-y: scroll;
-		font-weight: bold;
-		font-size: 25px;
-		font-family: 'Montserrat', sans-serif;
-
-	}
-
-	.windowContent{
-		position: relative;
-		top: 0px;
-		left:0px;
-		height: calc(100% - 125px);
-		width:calc(100% - 25px);
-		background-color: transparent;
-		margin: 10px;
-		overflow-y: scroll;
-		z-index: 2;
-		font-family: 'Montserrat', sans-serif;
-		outline-color: transparent;
-		border-color: transparent;
-	}
-
-	#bgDiv{
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
-		overflow: hidden;
-		background-color: rgba(255,66,66,0.6);
-	}
-
-	#mainCon{
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
-		overflow: hidden;
-		background-color:rgba(0,0,0,0.6);
-	}
-</style>
 
 <body>
-	<div id="bgDiv"></div>
-
-	<div id="con">
-		<div id="mainCon">
-			<div class="touch"></div>
-			<div class="touch"></div>
-
-			<div id="tasky"></div>
-			<div id="add" onclick="addWindow();">
-				+
-			</div>
-			<div id="delete"></div>
-			<div class="shadow" id="t_l"></div>
-
-		</div>
-	</div>
-	<script type="text/javascript">
-		let currentTarget;
-		let conHeight = document.getElementById("con").offsetHeight;
-		let conWidth = document.getElementById("con").offsetWidth;
-		let firstTarget = document.getElementById("con").children[0];
-		let downornot = 0;
-		let taskyNum = 0;
-		let touchornot = 0;
-		let flag = 0;
-		let flagTwoTouches = 0;
-		let targetData = {};
-		let rev = 0;
-		let iniX = [];
-		let iniY = [];
-		let htr;
-		let spot = 0;
-		let zq = 0;
-		let barornot = 1;
-		let resize = 0;
-
-		function createElement(x) {
-			let temp;
-			if ("element" in x) {
-				temp = document.createElement(x.element);
-
-			} else {
-				temp = document.createElement("div");
-
-			}
-			let attributes = x.attributes;
-
-			for (value in attributes) {
-				temp.setAttribute(value, attributes[value]);
-			}
-
-
-			
-			for (value in x.style) {
-
-				temp.style[value] = x.style[value];
-			}
-
-
-			if ("id" in x) {
-				temp.id = x.id;
-			}
-
-			if ("class" in x) {
-				temp.className = x.class;
-			}
-
-			if ("innerText" in x) {
-				temp.textContent = x.innerText;
-			}
-
-			if ("innerHTML" in x) {
-				temp.innerHTML = x.innerHTML;
-			}
-
-			let listeners = x.listeners;
-
-			for (value in listeners) {
-				temp.addEventListener(value, listeners[value]);
-			}
-
-			return temp;
-
-		}
-		window.onresize = function () {
-			conHeight = document.getElementById("con").offsetHeight;
-			conWidth = document.getElementById("con").offsetWidth;
-		};
-
-		window.onload = function () {
-			document.getElementById("con").addEventListener('touchmove', conTouchMove, { passive: true });
-			document.getElementById("con").addEventListener('touchend', conTouchEnd, { passive: true });
-			document.getElementById("con").addEventListener('touchstart', conTouchMove, { passive: true });
-			document.getElementById("con").addEventListener('mousedown', conMouseDown, { passive: true });
-			document.getElementById("con").addEventListener('mouseup', conMouseUp, { passive: true });
-			addWindow();
-		};
-
-		function windowMouseMove(event) {
-			let thisOffsetX = event.offsetX;
-			let thisOffsetY = event.offsetY;
-			let thisTarget = event.target;
-			if (thisTarget.getAttribute("data-name") == "bar") {
-				thisOffsetY += thisTarget.offsetTop;
-				thisTarget = thisTarget.parentElement;
-			}
-
-			if (thisTarget.getAttribute("small") == "yup") {
-				thisTarget.style.cursor = "pointer";
-				return 0;
-			}
-
-			
-
-			let thisOffsetHeight = thisTarget.offsetHeight;
-			let thisOffsetWidth = thisTarget.offsetWidth;
-
-			if (thisTarget.className == "window") {
-				if (thisOffsetX < 20 && thisOffsetY < 20) {
-					thisTarget.style.cursor = "nw-resize";
-				}
-				else if (thisOffsetX < 20 && thisOffsetY > (thisOffsetHeight - 20) && thisOffsetY < thisOffsetHeight) {
-					thisTarget.style.cursor = "sw-resize";
-				}
-				else if (thisOffsetX > (thisOffsetWidth - 20) && thisOffsetX < thisOffsetWidth && thisOffsetY > (thisOffsetHeight - 20) && thisOffsetY < thisOffsetHeight) {
-					thisTarget.style.cursor = "nw-resize";
-				}
-				else if (thisOffsetX > (thisOffsetWidth - 20) && thisOffsetX < thisOffsetWidth && thisOffsetY < 20) {
-					thisTarget.style.cursor = "ne-resize";
-				}
-				else if (thisOffsetX < 20) {
-					thisTarget.style.cursor = "ew-resize";
-				}
-				else if (thisOffsetY < 20) {
-					thisTarget.style.cursor = "ns-resize";
-				}
-				else if (thisOffsetY > (thisOffsetHeight - 20) && thisOffsetY < thisOffsetHeight) {
-					thisTarget.style.cursor = "ns-resize";
-				}
-				else if (thisOffsetX > (thisOffsetWidth - 20) && thisOffsetX < thisOffsetWidth) {
-					thisTarget.style.cursor = "ew-resize";
-				}
-				else {
-					thisTarget.style.cursor = "pointer";
-				}
-			}
-		}
-
-
-		function conMouseDown(x) {
-			downornot = 1;
-			if (x.target.className == "window" || x.target.getAttribute("data-name") == "bar") {
-				document.body.addEventListener('mousemove', windowTouchMove, { passive: true });
-			}
-		}
-		function conMouseUp(x) {
-			downornot = 0;
-			document.body.removeEventListener('mousemove', windowTouchMove, { passive: true });
-			windowTouchEnd(firstTarget, x.clientX);
-		}
-
-		function resizeToSpot(x, target) {
-			let shadowDetail = [];
-			if (x == 0) {
-				return;
-			}
-			else if (x == 1) {
-				shadowDetail = ["0", "60px", "calc(50% - 30px)", "50%"];
-			}
-			else if (x == 2) {
-				shadowDetail = ["0", "60px", "calc(100% - 60px)", "50%"];
-			}
-			else if (x == 3) {
-				shadowDetail = ["0", "calc(50% + 30px)", "calc(50% - 30px)", "50%"];
-			}
-			else if (x == 4) {
-				shadowDetail = ["50%", "60px", "calc(50% - 30px)", "50%"];
-			}
-			else if (x == 5) {
-				shadowDetail = ["50%", "60px", "calc(100% - 60px)", "50%"];
-			}
-			else if (x == 6) {
-				shadowDetail = ["50%", "calc(50% + 30px)", "calc(50% - 30px)", "50%"];
-			}
-			else if (x == 7) {
-				shadowDetail = ["0", "60px", "calc(50% - 30px)", "100%"];
-			}
-			else if (x == 8) {
-				shadowDetail = ["0", "calc(50% + 30px)", "calc(50% - 30px)", "100%"];
-			}
-
-			target.style.transitionDuration = "0.3s";
-
-			window.requestAnimationFrame(function () {
-				window.requestAnimationFrame(function () {
-					target.style.left = shadowDetail[0];
-					target.style.top = shadowDetail[1];
-					target.style.height = shadowDetail[2];
-					target.style.width = shadowDetail[3];
-					setTimeout(function () {
-						target.style.transitionDuration = "0s";
-					}, 300);
-				});
-			});
-		}
-
-		function whichSpot(xCoord, yCoord) {
-			let tempSpot = 0;
-			if (xCoord < 10 && yCoord > 60) {
-				if (yCoord < (60 + (conHeight - 60) / 3)) {
-					tempSpot = 1;
-				}
-				else if (yCoord < (60 + 2 * (conHeight - 60) / 3)) {
-					tempSpot = 2;
-				}
-				else if (yCoord < (60 + (conHeight - 60))) {
-					tempSpot = 3;
-				}
-			}
-			else if (xCoord > (conWidth - 10) && yCoord > 60) {
-				if (yCoord < (60 + (conHeight - 60) / 3)) {
-					tempSpot = 4;
-				}
-				else if (yCoord < (60 + 2 * (conHeight - 60) / 3)) {
-					tempSpot = 5;
-				}
-				else if (yCoord < (60 + (conHeight - 60))) {
-					tempSpot = 6;
-				}
-			}
-			else if (yCoord > (60) && yCoord < 70) {
-				if (xCoord > 0 && xCoord < (conWidth / 3)) {
-					tempSpot = 1;
-				}
-				else if (xCoord < 2 * (conWidth / 3)) {
-					tempSpot = 7;
-				}
-				else if (xCoord < 3 * (conWidth / 3)) {
-					tempSpot = 4;
-				}
-			}
-			else if (yCoord > (conHeight - 10)) {
-				if (xCoord > 0 && xCoord < (conWidth / 3)) {
-					tempSpot = 3;
-				}
-				else if (xCoord < 2 * (conWidth / 3)) {
-					tempSpot = 8;
-				}
-				else if (xCoord < 3 * (conWidth / 3)) {
-					tempSpot = 6;
-				}
-			}
-			else {
-				document.getElementById("t_l").style.opacity = "0";
-				tempSpot = 0;
-			}
-
-
-			return tempSpot;
-		}
-
-		function windowTouchEnd(x, xCoord) {
-			if (!x) {
-				return;
-			}
-			resize = 0;
-			document.getElementById("delete").style.right = "-50px";
-			document.getElementsByClassName("touch")[0].style.opacity = 0;
-			document.getElementsByClassName("touch")[1].style.opacity = 0;
-
-			if (x.changedTouches) {
-				currentTarget = x.changedTouches[0].target;
-				xCoord = x.changedTouches[0].clientX;
-			}
-			else {
-				currentTarget = firstTarget;
-			}
-
-			if (currentTarget && currentTarget.getAttribute("data-name") == "bar") {
-				currentTarget = currentTarget.parentElement;
-
-			}
-			if (currentTarget) {
-				currentTarget.children[1].style.pointerEvents = "auto";
-				currentTarget.children[2].style.pointerEvents = "auto";
-			}
-
-			document.getElementById("t_l").style.opacity = 0;
-			resizeToSpot(spot, currentTarget);
-			if (document.getElementById("placeholderTasky")) {
-				document.getElementById("placeholderTasky").remove();
-			}
-
-			if (rev == 1) {
-				currentTarget.remove();
-			}
-
-			if (firstTarget && firstTarget.getAttribute("small") == "nope" && htr < 60) {
-				firstTarget.style.zIndex = zq;
-				zq++;
-				taskbarManager(firstTarget.children[0], xCoord);
-			}
-
-			flagTwoTouches = 0;
-			flag = 0;
-			iniX = [];
-			spot = 0;
-			iniY = [];
-			firstTarget = null;
-		}
-
-		function conTouchMove(x) { //done
-			document.getElementsByClassName('touch')[0].style.top = event.touches[0].clientY - 15 + 'px';
-			document.getElementsByClassName('touch')[0].style.left = event.touches[0].clientX - 15 + 'px';
-			document.getElementsByClassName('touch')[0].style.zIndex = zq + 9;
-			document.getElementsByClassName('touch')[0].style.opacity = 1;
-			if (event.touches.length == 2) {
-				document.getElementsByClassName('touch')[1].style.top = event.touches[1].clientY - 15 + 'px';
-				document.getElementsByClassName('touch')[1].style.left = event.touches[1].clientX - 15 + 'px';
-				document.getElementsByClassName('touch')[1].style.zIndex = zq + 9;
-				document.getElementsByClassName('touch')[1].style.opacity = 1;
-			}
-		}
-
-		function conTouchEnd(x) {//done
-			document.getElementsByClassName('touch')[0].style.opacity = 0;
-			document.getElementsByClassName('touch')[1].style.opacity = 0;
-		}
-
-
-		function calculateResize(xCoord, yCoord, target) {
-			let posY = yCoord;
-			if (target.getAttribute("data-name") == "bar") {
-				posY = yCoord + target.offsetTop;
-			}
-
-			if (xCoord < 20 && posY < 20) {
-				resize = 5;
-			}
-			else if (xCoord < 20 && posY > (targetData.height - 20) && posY < targetData.height) {
-				resize = 6;
-			}
-			else if (xCoord > (targetData.width - 20) && xCoord < targetData.width && posY > (targetData.height - 20) && posY < targetData.height) {
-				resize = 7;
-			}
-			else if (xCoord > (targetData.width - 20) && xCoord < targetData.width && posY < 20) {
-				resize = 8;
-			}
-			else if (xCoord < 20) {
-				resize = 1;
-			}
-			else if (posY < 20) {
-				resize = 2;
-			}
-			else if (posY > (targetData.height - 20) && posY < targetData.height) {
-				resize = 3;
-			}
-			else if (xCoord > (targetData.width - 20) && xCoord < targetData.width) {
-				resize = 4;
-			}
-			else {
-				resize = 0;
-			}
-		}
-		function windowTouchMove(x) {
-			document.getElementById("delete").style.right = "10px";
-
-			let secondTarget;
-			let touches = x.touches;
-			let xCoord, yCoord, xCoord2, yCoord2;
-			if (touches) {
-				touchornot = 1;
-				xCoord = touches[0].clientX;
-				yCoord = touches[0].clientY;
-
-				if (touches.length == 2) {
-					xCoord2 = touches[1].clientX;
-					yCoord2 = touches[1].clientY;
-					secondTarget = touches[1].target;
-				}
-
-				firstTarget = touches[0].target;
-
-			}
-			else {
-				touchornot = 0;
-				xCoord = x.clientX;
-				yCoord = x.clientY;
-				if (flag == 0) {
-					firstTarget = x.target;
-					if (firstTarget.className != "window" && firstTarget.getAttribute("data-name") != "bar") {
-						return 0;
-					}
-				}
-			}
-
-			function initiateTouch() {
-				iniX = [];
-				iniY = [];
-				targetData = {};
-				iniX.push(xCoord);
-				iniY.push(yCoord);
-				iniX.push(xCoord2);
-				iniY.push(yCoord2);
-				targetData.height = firstTarget.offsetHeight;
-				targetData.width = firstTarget.offsetWidth;
-				targetData.top = firstTarget.offsetTop;
-				targetData.left = firstTarget.offsetLeft;
-				targetData.diffY = Math.abs(yCoord - yCoord2);
-				targetData.diffX = Math.abs(xCoord - xCoord2);
-			}
-
-			if (firstTarget.getAttribute("data-name") == "bar") {
-				firstTarget = firstTarget.parentElement;
-			}
-			if (touches && touches.length == 2 && secondTarget.getAttribute("data-name") == "bar") {
-				secondTarget = secondTarget.parentElement;
-			}
-
-
-			if (touches && touches.length == 2 && (secondTarget == firstTarget)) {
-				let currentDiffY = Math.abs(yCoord - yCoord2);
-				let currentDiffX = Math.abs(xCoord - xCoord2);
-
-				if (flag == 0) {
-					firstTarget.style.zIndex = zq++;
-					initiateTouch();
-				}
-
-				if (flagTwoTouches == 2) {
-					initiateTouch();
-				}
-
-
-				firstTarget.style.height = targetData.height - (targetData.diffY - currentDiffY) + "px";
-				firstTarget.style.width = targetData.width - (targetData.diffX - currentDiffX) + "px";
-				firstTarget.style.top = targetData.top + (targetData.diffY - currentDiffY) / 2 + ((yCoord - iniY[0]) + (yCoord2 - iniY[1])) * 0.5 + "px";
-				firstTarget.style.left = targetData.left + (targetData.diffX - currentDiffX) / 2 + ((xCoord - iniX[0]) + (xCoord2 - iniX[1])) * 0.5 + "px";
-
-				flagTwoTouches = 1;
-			}
-			else if ((!touchornot || (touches && touches.length == 1))) {
-
-				if (flag == 0) {
-					iniX = [];
-					iniY = [];
-					firstTarget.style.zIndex = zq++;
-					iniX.push(xCoord);
-					iniY.push(yCoord);
-					barornot = 0;
-					if (x.target.getAttribute("data-istop") == "true") {
-						barornot = 1;
-					}
-					
-					firstTarget.children[1].style.pointerEvents = "none";
-					firstTarget.children[2].style.pointerEvents = "none";
-					targetData = {};
-					targetData.top = firstTarget.offsetTop;
-					targetData.left = firstTarget.offsetLeft;
-					targetData.height = firstTarget.offsetHeight;
-					targetData.width = firstTarget.offsetWidth;
-
-					if (!touchornot && firstTarget.getAttribute("small") == "nope") {
-						calculateResize(x.offsetX, x.offsetY, x.target);
-					}
-				}
-
-				if (yCoord < 60 && xCoord > (conWidth - 60) && xCoord < conWidth) {
-					rev = 1;
-					firstTarget.style.opacity = 0.3;
-				}
-				else {
-					rev = 0;
-					firstTarget.style.opacity = 1;
-				}
-
-				flagTwoTouches = 2;
-
-				if (resize == 0 && barornot) {
-
-					firstTarget.style.top = targetData.top - (iniY[0] - yCoord) + "px";
-					firstTarget.style.left = targetData.left - (iniX[0] - xCoord) + "px";
-					htr = yCoord;
-					if (firstTarget.getAttribute("small") == "nope") {
-						if (yCoord < 60) {
-							firstTarget.style.transform = "scale(0.7)";
-							let itemNum = Math.min((Math.floor(xCoord / 60)), taskyNum);
-							itemNum = Math.max(itemNum, 0);
-
-							if (document.getElementById("placeholderTasky")) {
-								document.getElementById("placeholderTasky").remove();
-							}
-							let newItem = document.createElement("div");
-							newItem.id = "placeholderTasky";
-							document.getElementById("tasky").insertBefore(newItem, document.getElementById("tasky").children[itemNum]);
-						}
-						else {
-							firstTarget.style.transform = "scale(1)";
-							if (document.getElementById("placeholderTasky")) {
-								document.getElementById("placeholderTasky").remove();
-							}
-						}
-					}
-
-					spot = whichSpot(xCoord, yCoord);
-					
-					if (spot == 0) {
-						document.getElementById("t_l").style.opacity = "0";
-					} else {
-						document.getElementById("t_l").style.opacity = "1";
-						resizeToSpot(spot, document.getElementById("t_l"));
-					}
-				}
-				else if (resize == 1 || resize == 5 || resize == 6) {
-					firstTarget.style.width = (targetData.width - (xCoord - targetData.left)) + "px";
-					firstTarget.style.left = (targetData.left + (xCoord - targetData.left)) + "px";
-				}
-				if (resize == 2 || resize == 5 || resize == 8) {
-					firstTarget.style.height = (targetData.height - (yCoord - targetData.top)) + "px";
-					firstTarget.style.top = (targetData.top + (yCoord - targetData.top)) + "px";
-				}
-				if (resize == 3 || resize == 6 || resize == 7) {
-					firstTarget.style.height = ((yCoord - targetData.top)) + "px";
-
-				}
-				if (resize == 4 || resize == 7 || resize == 8) {
-					firstTarget.style.width = (xCoord - targetData.left) + "px";
-				}
-
-				if (firstTarget.getAttribute("small") == "yup") {
-					dew(x);
-				}
-			}
-
-			flag = 1;
-
-		}
-
-		function full(thisDOM) {
-			thisDOM.style.height = (document.getElementById("con").offsetHeight - 60) + "px";
-			thisDOM.style.width = (document.getElementById("con").offsetWidth) + "px";
-			thisDOM.style.top = "60px";
-			thisDOM.style.left = "0px";
-		}
-
-		function taskbarManager(target, z = 0, xCoord = 150, yCoord = 210) {
-			if (!touchornot && firstTarget) {
-				firstTarget.removeEventListener('mousemove', windowTouchMove, { passive: true });
-			}
-
-			htr = 610;
-
-			let parentTarget = target.parentElement;
-			target.style.zIndex = zq++;
-			parentTarget.style.transform = "scale(1)";
-			if (parentTarget.getAttribute("small") == "nope") {
-				taskyNum++;
-				parentTarget.setAttribute("small", "yup");
-				parentTarget.style.transitionDuration = "0.3s";
-				let taskItem = Math.min((Math.floor((z) / 60)), taskyNum);
-				taskItem = Math.max(taskItem, 0);
-				parentTarget.style.height = "50px";
-				parentTarget.style.width = "50px";
-				parentTarget.style.borderRadius = "10px";
-				parentTarget.style.top = "5px";
-				if (taskItem == taskyNum) {
-					parentTarget.style.left = ((taskyNum - 1) * 60 + 5) + "px";
-				}
-				else {
-					parentTarget.style.left = ((taskItem) * 60 + 5) + "px";
-				}
-				setTimeout(function () {
-					parentTarget.style.transitionDuration = "0s";
-					parentTarget.style.position = "static";
-					parentTarget.style.display = "inline-block";
-					parentTarget.style.margin = "5px";
-					parentTarget.addEventListener('mouseup', dew_end, { passive: true });
-					parentTarget.addEventListener('touchmove', dew, { passive: true });
-					parentTarget.addEventListener('touchend', dew_end, { passive: true });
-					if (rev == 1) {
-						taskyNum--;
-						parentTarget.remove();
-						rev = 0;
-					}
-					else {
-						document.getElementById("tasky").insertBefore(parentTarget, document.getElementById("tasky").children[taskItem]);
-					}
-				}, 300);
-			}
-			else {
-				taskyNum--;
-				parentTarget.removeEventListener('mouseup', dew_end, { passive: true });
-				parentTarget.removeEventListener('touchmove', dew, { passive: true });
-				parentTarget.removeEventListener('touchend', dew_end, { passive: true });
-
-				spot = whichSpot(xCoord, yCoord);
-
-				if (spot == 0) {
-					parentTarget.style.left = (xCoord - 150) + "px";
-					parentTarget.style.top = (yCoord - 150) + "px";
-					parentTarget.style.height = "300px";
-					parentTarget.style.width = "300px";
-					parentTarget.style.transitionDuration = "0s";
-				}
-				else {
-					parentTarget.style.transitionDuration = "0.3s";
-				}
-
-				parentTarget.style.position = "absolute";
-				parentTarget.style.display = "block";
-				parentTarget.style.margin = "0px";
-				parentTarget.style.borderRadius = "20px";
-				parentTarget.setAttribute("small", "nope");
-
-				if (rev == 1) {
-					parentTarget.remove();
-					rev = 0;
-					taskyNum--;
-				}
-				else {
-					document.getElementById("con").appendChild(parentTarget);
-				}
-
-			}
-		}
-
-		function dew(event) {
-			let xCoord, yCoord, thisTarget;
-
-			if (event.touches) {
-				thisTarget = event.touches[0].target;
-				xCoord = event.touches[0].clientX;
-				yCoord = event.touches[0].clientY;
-			}
-			else {
-				firstTarget.style.zIndex = ++zq;
-				thisTarget = firstTarget;
-				xCoord = event.clientX;
-				yCoord = event.clientY;
-
-				if (!downornot) {
-					return 0;
-				}
-			}
-			
-
-			let itemNum = Math.min((Math.floor((xCoord) / 60)), taskyNum);
-			itemNum = Math.max(itemNum, 0);
-
-			if (thisTarget.getAttribute("data-name") == "bar") {
-				thisTarget = thisTarget.parentElement;
-			}
-			if (document.getElementById("placeholderTasky")) {
-				document.getElementById("placeholderTasky").remove();
-			}
-			if (yCoord < 60) {
-				let newItem = document.createElement("div");
-				newItem.id = "placeholderTasky";
-				document.getElementById("tasky").insertBefore(newItem, document.getElementById("tasky").children[itemNum]);
-			}
-
-			if (yCoord > 60) {
-				thisTarget.style.transform = "scale(1.5)";
-			}
-			else {
-				thisTarget.style.transform = "scale(1)";
-			}
-			thisTarget.style.position = "absolute";
-		}
-
-		function dew_end(event) {
-			let xCoord;
-			let yCoord;
-			let thisTarget;
-			if (event.changedTouches) {
-				thisTarget = event.changedTouches[0].target;
-				yCoord = event.changedTouches[0].clientY;
-				xCoord = event.changedTouches[0].clientX;
-			}
-			else {
-				thisTarget = firstTarget;
-				if (!thisTarget) {
-					return 0;
-				}
-				yCoord = event.clientY;
-				xCoord = event.clientX;
-			}
-
-
-			if (thisTarget.getAttribute("data-name") == "bar") {
-				thisTarget = thisTarget.parentElement;
-			}
-
-			let itemNum = Math.min((Math.floor((xCoord) / 60)), taskyNum);
-			itemNum = Math.max(itemNum, 0);
-
-			if (yCoord < 60) {
-				htr = 610;
-				thisTarget.style.position = "static";
-				if (document.getElementById("placeholderTasky")) {
-					document.getElementById("placeholderTasky").remove();
-				}
-				if (rev == 1) {
-					thisTarget.remove();
-					rev = 0;
-					taskyNum--;
-				}
-				else {
-					document.getElementById("tasky").insertBefore(thisTarget, document.getElementById("tasky").children[itemNum]);
-				}
-			}
-			else {
-				if (document.getElementById("placeholderTasky")) {
-					document.getElementById("placeholderTasky").remove();
-				}
-
-				taskbarManager(thisTarget.children[0], null, xCoord, yCoord);
-			}
-		}
-
-		function addWindow() {
-			let color = Math.floor(100 + Math.random() * 156) + ", " + Math.floor(100 + Math.random() * 156) + ", " + Math.floor(100 + Math.random() * 156);
-			let newWindow = createElement({
-				"element" : "div",
-				"style" : {
-					"position" : "absolute",
-					"backgroundColor" : "rgba(" + color + ",1)",
-					"zIndex" : zq + 1
-				},
-				"class" : "window",
-				"attributes" : {
-					"full" : "nope",
-					"small" : "nope"
-				}
-			});
-			newWindow.ondblclick = function () {
-				full(this);
-			}
-
-			newWindow.onclick = function () {
-				this.style.zIndex = ++zq;
-			}
-			newWindow.addEventListener('mousemove', windowMouseMove, { passive: true });
-			newWindow.addEventListener('touchmove', windowTouchMove, { passive: true });
-			newWindow.addEventListener('touchend', windowTouchEnd, { passive: true });
-
-			newWindow.appendChild(createElement({
-				"attributes" : {
-					"data-name" : "bar",
-					"data-istop" : "true"
-				},
-				"class" : "windowTop",
-				"listeners" : {
-					"dblclick" : function(event){
-						taskbarManager(this);
-						event.stopPropagation();
-					}
-				}
-			}));
-
-			newWindow.appendChild(createElement({
-				"attributes" : {
-					"data-name" : "bar",
-					"contenteditable" : "true"
-				},
-				"class" : "windowHeading",
-				"innerText" : "Heading"
-			}));
-
-			newWindow.appendChild(createElement({
-				"element" : "textarea",
-				"attributes" : {
-					"data-name" : "bar"
-				},
-				"class" : "windowContent",
-				"innerText" : "Content",
-			}));
-
-
-			document.getElementById("con").appendChild(newWindow);
-		}
-	</script>
+    <div id="bgDiv"></div>
+
+    <div id="con">
+        <div id="mainCon">
+            <div class="touch"></div>
+            <div class="touch"></div>
+
+            <div id="tasky"></div>
+            <div id="add" onclick="addWindow();">
+                +
+            </div>
+            <div id="delete"></div>
+            <div class="shadow" id="t_l"></div>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        let currentTarget;
+        let conHeight = document.getElementById("con").offsetHeight;
+        let conWidth = document.getElementById("con").offsetWidth;
+        let firstTarget = document.getElementById("con").children[0];
+        let downornot = 0;
+        let taskyNum = 0;
+        let touchornot = 0;
+        let flag = 0;
+        let flagTwoTouches = 0;
+        let targetData = {};
+        let rev = 0;
+        let iniX = [];
+        let iniY = [];
+        let htr;
+        let spot = 0;
+        let zq = 0;
+        let barornot = 1;
+        let resize = 0;
+
+        function createElement(x) {
+            let temp;
+            if ("element" in x) {
+                temp = document.createElement(x.element);
+
+            } else {
+                temp = document.createElement("div");
+
+            }
+            let attributes = x.attributes;
+
+            for (value in attributes) {
+                temp.setAttribute(value, attributes[value]);
+            }
+
+
+
+            for (value in x.style) {
+
+                temp.style[value] = x.style[value];
+            }
+
+
+            if ("id" in x) {
+                temp.id = x.id;
+            }
+
+            if ("class" in x) {
+                temp.className = x.class;
+            }
+
+            if ("innerText" in x) {
+                temp.textContent = x.innerText;
+            }
+
+            if ("innerHTML" in x) {
+                temp.innerHTML = x.innerHTML;
+            }
+
+            let listeners = x.listeners;
+
+            for (value in listeners) {
+                temp.addEventListener(value, listeners[value]);
+            }
+
+            return temp;
+
+        }
+        window.onresize = function () {
+            conHeight = document.getElementById("con").offsetHeight;
+            conWidth = document.getElementById("con").offsetWidth;
+        };
+
+        window.onload = function () {
+            document.getElementById("con").addEventListener('touchmove', conTouchMove, { passive: true });
+            document.getElementById("con").addEventListener('touchend', conTouchEnd, { passive: true });
+            document.getElementById("con").addEventListener('touchstart', conTouchMove, { passive: true });
+            document.getElementById("con").addEventListener('mousedown', conMouseDown, { passive: true });
+            document.getElementById("con").addEventListener('mouseup', conMouseUp, { passive: true });
+            addWindow();
+        };
+
+        function windowMouseMove(event) {
+            let thisOffsetX = event.offsetX;
+            let thisOffsetY = event.offsetY;
+            let thisTarget = event.target;
+            if (thisTarget.getAttribute("data-name") == "bar") {
+                thisOffsetY += thisTarget.offsetTop;
+                thisTarget = thisTarget.parentElement;
+            }
+
+            if (thisTarget.getAttribute("small") == "yup") {
+                thisTarget.style.cursor = "pointer";
+                return 0;
+            }
+
+
+
+            let thisOffsetHeight = thisTarget.offsetHeight;
+            let thisOffsetWidth = thisTarget.offsetWidth;
+
+            if (thisTarget.className == "window") {
+                if (thisOffsetX < 20 && thisOffsetY < 20) {
+                    thisTarget.style.cursor = "nw-resize";
+                }
+                else if (thisOffsetX < 20 && thisOffsetY > (thisOffsetHeight - 20) && thisOffsetY < thisOffsetHeight) {
+                    thisTarget.style.cursor = "sw-resize";
+                }
+                else if (thisOffsetX > (thisOffsetWidth - 20) && thisOffsetX < thisOffsetWidth && thisOffsetY > (thisOffsetHeight - 20) && thisOffsetY < thisOffsetHeight) {
+                    thisTarget.style.cursor = "nw-resize";
+                }
+                else if (thisOffsetX > (thisOffsetWidth - 20) && thisOffsetX < thisOffsetWidth && thisOffsetY < 20) {
+                    thisTarget.style.cursor = "ne-resize";
+                }
+                else if (thisOffsetX < 20) {
+                    thisTarget.style.cursor = "ew-resize";
+                }
+                else if (thisOffsetY < 20) {
+                    thisTarget.style.cursor = "ns-resize";
+                }
+                else if (thisOffsetY > (thisOffsetHeight - 20) && thisOffsetY < thisOffsetHeight) {
+                    thisTarget.style.cursor = "ns-resize";
+                }
+                else if (thisOffsetX > (thisOffsetWidth - 20) && thisOffsetX < thisOffsetWidth) {
+                    thisTarget.style.cursor = "ew-resize";
+                }
+                else {
+                    thisTarget.style.cursor = "pointer";
+                }
+            }
+        }
+
+
+        function conMouseDown(x) {
+            downornot = 1;
+            if (x.target.className == "window" || x.target.getAttribute("data-name") == "bar") {
+                document.body.addEventListener('mousemove', windowTouchMove, { passive: true });
+            }
+        }
+        function conMouseUp(x) {
+            downornot = 0;
+            document.body.removeEventListener('mousemove', windowTouchMove, { passive: true });
+            windowTouchEnd(firstTarget, x.clientX);
+        }
+
+        function resizeToSpot(x, target) {
+            let shadowDetail = [];
+            if (x == 0) {
+                return;
+            }
+            else if (x == 1) {
+                shadowDetail = ["0", "60px", "calc(50% - 30px)", "50%"];
+            }
+            else if (x == 2) {
+                shadowDetail = ["0", "60px", "calc(100% - 60px)", "50%"];
+            }
+            else if (x == 3) {
+                shadowDetail = ["0", "calc(50% + 30px)", "calc(50% - 30px)", "50%"];
+            }
+            else if (x == 4) {
+                shadowDetail = ["50%", "60px", "calc(50% - 30px)", "50%"];
+            }
+            else if (x == 5) {
+                shadowDetail = ["50%", "60px", "calc(100% - 60px)", "50%"];
+            }
+            else if (x == 6) {
+                shadowDetail = ["50%", "calc(50% + 30px)", "calc(50% - 30px)", "50%"];
+            }
+            else if (x == 7) {
+                shadowDetail = ["0", "60px", "calc(50% - 30px)", "100%"];
+            }
+            else if (x == 8) {
+                shadowDetail = ["0", "calc(50% + 30px)", "calc(50% - 30px)", "100%"];
+            }
+
+            target.style.transitionDuration = "0.3s";
+
+            window.requestAnimationFrame(function () {
+                window.requestAnimationFrame(function () {
+                    target.style.left = shadowDetail[0];
+                    target.style.top = shadowDetail[1];
+                    target.style.height = shadowDetail[2];
+                    target.style.width = shadowDetail[3];
+                    setTimeout(function () {
+                        target.style.transitionDuration = "0s";
+                    }, 300);
+                });
+            });
+        }
+
+        function whichSpot(xCoord, yCoord) {
+            let tempSpot = 0;
+            if (xCoord < 10 && yCoord > 60) {
+                if (yCoord < (60 + (conHeight - 60) / 3)) {
+                    tempSpot = 1;
+                }
+                else if (yCoord < (60 + 2 * (conHeight - 60) / 3)) {
+                    tempSpot = 2;
+                }
+                else if (yCoord < (60 + (conHeight - 60))) {
+                    tempSpot = 3;
+                }
+            }
+            else if (xCoord > (conWidth - 10) && yCoord > 60) {
+                if (yCoord < (60 + (conHeight - 60) / 3)) {
+                    tempSpot = 4;
+                }
+                else if (yCoord < (60 + 2 * (conHeight - 60) / 3)) {
+                    tempSpot = 5;
+                }
+                else if (yCoord < (60 + (conHeight - 60))) {
+                    tempSpot = 6;
+                }
+            }
+            else if (yCoord > (60) && yCoord < 70) {
+                if (xCoord > 0 && xCoord < (conWidth / 3)) {
+                    tempSpot = 1;
+                }
+                else if (xCoord < 2 * (conWidth / 3)) {
+                    tempSpot = 7;
+                }
+                else if (xCoord < 3 * (conWidth / 3)) {
+                    tempSpot = 4;
+                }
+            }
+            else if (yCoord > (conHeight - 10)) {
+                if (xCoord > 0 && xCoord < (conWidth / 3)) {
+                    tempSpot = 3;
+                }
+                else if (xCoord < 2 * (conWidth / 3)) {
+                    tempSpot = 8;
+                }
+                else if (xCoord < 3 * (conWidth / 3)) {
+                    tempSpot = 6;
+                }
+            }
+            else {
+                document.getElementById("t_l").style.opacity = "0";
+                tempSpot = 0;
+            }
+
+
+            return tempSpot;
+        }
+
+        function windowTouchEnd(x, xCoord) {
+            if (!x) {
+                return;
+            }
+            resize = 0;
+            document.getElementById("delete").style.right = "-50px";
+            document.getElementsByClassName("touch")[0].style.opacity = 0;
+            document.getElementsByClassName("touch")[1].style.opacity = 0;
+
+            if (x.changedTouches) {
+                currentTarget = x.changedTouches[0].target;
+                xCoord = x.changedTouches[0].clientX;
+            }
+            else {
+                currentTarget = firstTarget;
+            }
+
+            if (currentTarget && currentTarget.getAttribute("data-name") == "bar") {
+                currentTarget = currentTarget.parentElement;
+
+            }
+            if (currentTarget) {
+                currentTarget.children[1].style.pointerEvents = "auto";
+                currentTarget.children[2].style.pointerEvents = "auto";
+            }
+
+            document.getElementById("t_l").style.opacity = 0;
+            resizeToSpot(spot, currentTarget);
+            if (document.getElementById("placeholderTasky")) {
+                document.getElementById("placeholderTasky").remove();
+            }
+
+            if (rev == 1) {
+                currentTarget.remove();
+            }
+
+            if (firstTarget && firstTarget.getAttribute("small") == "nope" && htr < 60) {
+                firstTarget.style.zIndex = zq;
+                zq++;
+                taskbarManager(firstTarget.children[0], xCoord);
+            }
+
+            flagTwoTouches = 0;
+            flag = 0;
+            iniX = [];
+            spot = 0;
+            iniY = [];
+            firstTarget = null;
+        }
+
+        function conTouchMove(x) {
+            document.getElementsByClassName('touch')[0].style.top = `${event.touches[0].clientY - 15}px`;
+            document.getElementsByClassName('touch')[0].style.left = event.touches[0].clientX - 15 + 'px';
+            document.getElementsByClassName('touch')[0].style.zIndex = zq + 9;
+            document.getElementsByClassName('touch')[0].style.opacity = 1;
+            if (event.touches.length == 2) {
+                document.getElementsByClassName('touch')[1].style.top = event.touches[1].clientY - 15 + 'px';
+                document.getElementsByClassName('touch')[1].style.left = event.touches[1].clientX - 15 + 'px';
+                document.getElementsByClassName('touch')[1].style.zIndex = zq + 9;
+                document.getElementsByClassName('touch')[1].style.opacity = 1;
+            }
+        }
+
+        function conTouchEnd(x) {//done
+            document.getElementsByClassName('touch')[0].style.opacity = 0;
+            document.getElementsByClassName('touch')[1].style.opacity = 0;
+        }
+
+
+        function calculateResize(xCoord, yCoord, target) {
+            let posY = yCoord;
+            if (target.getAttribute("data-name") == "bar") {
+                posY = yCoord + target.offsetTop;
+            }
+
+            if (xCoord < 20 && posY < 20) {
+                resize = 5;
+            }
+            else if (xCoord < 20 && posY > (targetData.height - 20) && posY < targetData.height) {
+                resize = 6;
+            }
+            else if (xCoord > (targetData.width - 20) && xCoord < targetData.width && posY > (targetData.height - 20) && posY < targetData.height) {
+                resize = 7;
+            }
+            else if (xCoord > (targetData.width - 20) && xCoord < targetData.width && posY < 20) {
+                resize = 8;
+            }
+            else if (xCoord < 20) {
+                resize = 1;
+            }
+            else if (posY < 20) {
+                resize = 2;
+            }
+            else if (posY > (targetData.height - 20) && posY < targetData.height) {
+                resize = 3;
+            }
+            else if (xCoord > (targetData.width - 20) && xCoord < targetData.width) {
+                resize = 4;
+            }
+            else {
+                resize = 0;
+            }
+        }
+        function windowTouchMove(x) {
+            document.getElementById("delete").style.right = "10px";
+
+            let secondTarget;
+            let touches = x.touches;
+            let xCoord, yCoord, xCoord2, yCoord2;
+            if (touches) {
+                touchornot = 1;
+                xCoord = touches[0].clientX;
+                yCoord = touches[0].clientY;
+
+                if (touches.length == 2) {
+                    xCoord2 = touches[1].clientX;
+                    yCoord2 = touches[1].clientY;
+                    secondTarget = touches[1].target;
+                }
+
+                firstTarget = touches[0].target;
+
+            }
+            else {
+                touchornot = 0;
+                xCoord = x.clientX;
+                yCoord = x.clientY;
+                if (flag == 0) {
+                    firstTarget = x.target;
+                    if (firstTarget.className != "window" && firstTarget.getAttribute("data-name") != "bar") {
+                        return 0;
+                    }
+                }
+            }
+
+            function initiateTouch() {
+                iniX = [];
+                iniY = [];
+                targetData = {};
+                iniX.push(xCoord);
+                iniY.push(yCoord);
+                iniX.push(xCoord2);
+                iniY.push(yCoord2);
+                targetData.height = firstTarget.offsetHeight;
+                targetData.width = firstTarget.offsetWidth;
+                targetData.top = firstTarget.offsetTop;
+                targetData.left = firstTarget.offsetLeft;
+                targetData.diffY = Math.abs(yCoord - yCoord2);
+                targetData.diffX = Math.abs(xCoord - xCoord2);
+            }
+
+            if (firstTarget.getAttribute("data-name") == "bar") {
+                firstTarget = firstTarget.parentElement;
+            }
+            if (touches && touches.length == 2 && secondTarget.getAttribute("data-name") == "bar") {
+                secondTarget = secondTarget.parentElement;
+            }
+
+
+            if (touches && touches.length == 2 && (secondTarget == firstTarget)) {
+                let currentDiffY = Math.abs(yCoord - yCoord2);
+                let currentDiffX = Math.abs(xCoord - xCoord2);
+
+                if (flag == 0) {
+                    firstTarget.style.zIndex = zq++;
+                    initiateTouch();
+                }
+
+                if (flagTwoTouches == 2) {
+                    initiateTouch();
+                }
+
+
+                firstTarget.style.height = targetData.height - (targetData.diffY - currentDiffY) + "px";
+                firstTarget.style.width = targetData.width - (targetData.diffX - currentDiffX) + "px";
+                firstTarget.style.top = targetData.top + (targetData.diffY - currentDiffY) / 2 + ((yCoord - iniY[0]) + (yCoord2 - iniY[1])) * 0.5 + "px";
+                firstTarget.style.left = targetData.left + (targetData.diffX - currentDiffX) / 2 + ((xCoord - iniX[0]) + (xCoord2 - iniX[1])) * 0.5 + "px";
+
+                flagTwoTouches = 1;
+            }
+            else if ((!touchornot || (touches && touches.length == 1))) {
+
+                if (flag == 0) {
+                    iniX = [];
+                    iniY = [];
+                    firstTarget.style.zIndex = zq++;
+                    iniX.push(xCoord);
+                    iniY.push(yCoord);
+                    barornot = 0;
+                    if (x.target.getAttribute("data-istop") == "true") {
+                        barornot = 1;
+                    }
+
+                    firstTarget.children[1].style.pointerEvents = "none";
+                    firstTarget.children[2].style.pointerEvents = "none";
+                    targetData = {};
+                    targetData.top = firstTarget.offsetTop;
+                    targetData.left = firstTarget.offsetLeft;
+                    targetData.height = firstTarget.offsetHeight;
+                    targetData.width = firstTarget.offsetWidth;
+
+                    if (!touchornot && firstTarget.getAttribute("small") == "nope") {
+                        calculateResize(x.offsetX, x.offsetY, x.target);
+                    }
+                }
+
+                if (yCoord < 60 && xCoord > (conWidth - 60) && xCoord < conWidth) {
+                    rev = 1;
+                    firstTarget.style.opacity = 0.3;
+                }
+                else {
+                    rev = 0;
+                    firstTarget.style.opacity = 1;
+                }
+
+                flagTwoTouches = 2;
+
+                if (resize == 0 && barornot) {
+
+                    firstTarget.style.top = targetData.top - (iniY[0] - yCoord) + "px";
+                    firstTarget.style.left = targetData.left - (iniX[0] - xCoord) + "px";
+                    htr = yCoord;
+                    if (firstTarget.getAttribute("small") == "nope") {
+                        if (yCoord < 60) {
+                            firstTarget.style.transform = "scale(0.7)";
+                            let itemNum = Math.min((Math.floor(xCoord / 60)), taskyNum);
+                            itemNum = Math.max(itemNum, 0);
+
+                            if (document.getElementById("placeholderTasky")) {
+                                document.getElementById("placeholderTasky").remove();
+                            }
+                            let newItem = document.createElement("div");
+                            newItem.id = "placeholderTasky";
+                            document.getElementById("tasky").insertBefore(newItem, document.getElementById("tasky").children[itemNum]);
+                        }
+                        else {
+                            firstTarget.style.transform = "scale(1)";
+                            if (document.getElementById("placeholderTasky")) {
+                                document.getElementById("placeholderTasky").remove();
+                            }
+                        }
+                    }
+
+                    spot = whichSpot(xCoord, yCoord);
+
+                    if (spot == 0) {
+                        document.getElementById("t_l").style.opacity = "0";
+                    } else {
+                        document.getElementById("t_l").style.opacity = "1";
+                        resizeToSpot(spot, document.getElementById("t_l"));
+                    }
+                }
+                else if (resize == 1 || resize == 5 || resize == 6) {
+                    firstTarget.style.width = (targetData.width - (xCoord - targetData.left)) + "px";
+                    firstTarget.style.left = (targetData.left + (xCoord - targetData.left)) + "px";
+                }
+                if (resize == 2 || resize == 5 || resize == 8) {
+                    firstTarget.style.height = (targetData.height - (yCoord - targetData.top)) + "px";
+                    firstTarget.style.top = (targetData.top + (yCoord - targetData.top)) + "px";
+                }
+                if (resize == 3 || resize == 6 || resize == 7) {
+                    firstTarget.style.height = ((yCoord - targetData.top)) + "px";
+
+                }
+                if (resize == 4 || resize == 7 || resize == 8) {
+                    firstTarget.style.width = (xCoord - targetData.left) + "px";
+                }
+
+                if (firstTarget.getAttribute("small") == "yup") {
+                    dew(x);
+                }
+            }
+
+            flag = 1;
+
+        }
+
+        function full(thisDOM) {
+            thisDOM.style.height = (document.getElementById("con").offsetHeight - 60) + "px";
+            thisDOM.style.width = (document.getElementById("con").offsetWidth) + "px";
+            thisDOM.style.top = "60px";
+            thisDOM.style.left = "0px";
+        }
+
+        function taskbarManager(target, z = 0, xCoord = 150, yCoord = 210) {
+            if (!touchornot && firstTarget) {
+                firstTarget.removeEventListener('mousemove', windowTouchMove, { passive: true });
+            }
+
+            htr = 610;
+
+            let parentTarget = target.parentElement;
+            target.style.zIndex = zq++;
+            parentTarget.style.transform = "scale(1)";
+            if (parentTarget.getAttribute("small") == "nope") {
+                taskyNum++;
+                parentTarget.setAttribute("small", "yup");
+                parentTarget.style.transitionDuration = "0.3s";
+                let taskItem = Math.min((Math.floor((z) / 60)), taskyNum);
+                taskItem = Math.max(taskItem, 0);
+                parentTarget.style.height = "50px";
+                parentTarget.style.width = "50px";
+                parentTarget.style.borderRadius = "10px";
+                parentTarget.style.top = "5px";
+                if (taskItem == taskyNum) {
+                    parentTarget.style.left = ((taskyNum - 1) * 60 + 5) + "px";
+                }
+                else {
+                    parentTarget.style.left = ((taskItem) * 60 + 5) + "px";
+                }
+                setTimeout(function () {
+                    parentTarget.style.transitionDuration = "0s";
+                    parentTarget.style.position = "static";
+                    parentTarget.style.display = "inline-block";
+                    parentTarget.style.margin = "5px";
+                    parentTarget.addEventListener('mouseup', dew_end, { passive: true });
+                    parentTarget.addEventListener('touchmove', dew, { passive: true });
+                    parentTarget.addEventListener('touchend', dew_end, { passive: true });
+                    if (rev == 1) {
+                        taskyNum--;
+                        parentTarget.remove();
+                        rev = 0;
+                    }
+                    else {
+                        document.getElementById("tasky").insertBefore(parentTarget, document.getElementById("tasky").children[taskItem]);
+                    }
+                }, 300);
+            }
+            else {
+                taskyNum--;
+                parentTarget.removeEventListener('mouseup', dew_end, { passive: true });
+                parentTarget.removeEventListener('touchmove', dew, { passive: true });
+                parentTarget.removeEventListener('touchend', dew_end, { passive: true });
+
+                spot = whichSpot(xCoord, yCoord);
+
+                if (spot == 0) {
+                    parentTarget.style.left = (xCoord - 150) + "px";
+                    parentTarget.style.top = (yCoord - 150) + "px";
+                    parentTarget.style.height = "300px";
+                    parentTarget.style.width = "300px";
+                    parentTarget.style.transitionDuration = "0s";
+                }
+                else {
+                    parentTarget.style.transitionDuration = "0.3s";
+                }
+
+                parentTarget.style.position = "absolute";
+                parentTarget.style.display = "block";
+                parentTarget.style.margin = "0px";
+                parentTarget.style.borderRadius = "20px";
+                parentTarget.setAttribute("small", "nope");
+
+                if (rev == 1) {
+                    parentTarget.remove();
+                    rev = 0;
+                    taskyNum--;
+                }
+                else {
+                    document.getElementById("con").appendChild(parentTarget);
+                }
+
+            }
+        }
+
+        function dew(event) {
+            let xCoord, yCoord, thisTarget;
+
+            if (event.touches) {
+                thisTarget = event.touches[0].target;
+                xCoord = event.touches[0].clientX;
+                yCoord = event.touches[0].clientY;
+            }
+            else {
+                firstTarget.style.zIndex = ++zq;
+                thisTarget = firstTarget;
+                xCoord = event.clientX;
+                yCoord = event.clientY;
+
+                if (!downornot) {
+                    return 0;
+                }
+            }
+
+
+            let itemNum = Math.min((Math.floor((xCoord) / 60)), taskyNum);
+            itemNum = Math.max(itemNum, 0);
+
+            if (thisTarget.getAttribute("data-name") == "bar") {
+                thisTarget = thisTarget.parentElement;
+            }
+            if (document.getElementById("placeholderTasky")) {
+                document.getElementById("placeholderTasky").remove();
+            }
+            if (yCoord < 60) {
+                let newItem = document.createElement("div");
+                newItem.id = "placeholderTasky";
+                document.getElementById("tasky").insertBefore(newItem, document.getElementById("tasky").children[itemNum]);
+            }
+
+            if (yCoord > 60) {
+                thisTarget.style.transform = "scale(1.5)";
+            }
+            else {
+                thisTarget.style.transform = "scale(1)";
+            }
+            thisTarget.style.position = "absolute";
+        }
+
+        function dew_end(event) {
+            let xCoord;
+            let yCoord;
+            let thisTarget;
+            if (event.changedTouches) {
+                thisTarget = event.changedTouches[0].target;
+                yCoord = event.changedTouches[0].clientY;
+                xCoord = event.changedTouches[0].clientX;
+            }
+            else {
+                thisTarget = firstTarget;
+                if (!thisTarget) {
+                    return 0;
+                }
+                yCoord = event.clientY;
+                xCoord = event.clientX;
+            }
+
+
+            if (thisTarget.getAttribute("data-name") == "bar") {
+                thisTarget = thisTarget.parentElement;
+            }
+
+            let itemNum = Math.min((Math.floor((xCoord) / 60)), taskyNum);
+            itemNum = Math.max(itemNum, 0);
+
+            if (yCoord < 60) {
+                htr = 610;
+                thisTarget.style.position = "static";
+                if (document.getElementById("placeholderTasky")) {
+                    document.getElementById("placeholderTasky").remove();
+                }
+                if (rev == 1) {
+                    thisTarget.remove();
+                    rev = 0;
+                    taskyNum--;
+                }
+                else {
+                    document.getElementById("tasky").insertBefore(thisTarget, document.getElementById("tasky").children[itemNum]);
+                }
+            }
+            else {
+                if (document.getElementById("placeholderTasky")) {
+                    document.getElementById("placeholderTasky").remove();
+                }
+
+                taskbarManager(thisTarget.children[0], null, xCoord, yCoord);
+            }
+        }
+
+        function addWindow() {
+            let color = Math.floor(100 + Math.random() * 156) + ", " + Math.floor(100 + Math.random() * 156) + ", " + Math.floor(100 + Math.random() * 156);
+            let newWindow = createElement({
+                "element": "div",
+                "style": {
+                    "position": "absolute",
+                    "backgroundColor": "rgba(" + color + ",1)",
+                    "zIndex": zq + 1
+                },
+                "class": "window",
+                "attributes": {
+                    "full": "nope",
+                    "small": "nope"
+                }
+            });
+            newWindow.ondblclick = function () {
+                full(this);
+            }
+
+            newWindow.onclick = function () {
+                this.style.zIndex = ++zq;
+            }
+            newWindow.addEventListener('mousemove', windowMouseMove, { passive: true });
+            newWindow.addEventListener('touchmove', windowTouchMove, { passive: true });
+            newWindow.addEventListener('touchend', windowTouchEnd, { passive: true });
+
+            newWindow.appendChild(createElement({
+                "attributes": {
+                    "data-name": "bar",
+                    "data-istop": "true"
+                },
+                "class": "windowTop",
+                "listeners": {
+                    "dblclick": function (event) {
+                        taskbarManager(this);
+                        event.stopPropagation();
+                    }
+                }
+            }));
+
+            newWindow.appendChild(createElement({
+                "attributes": {
+                    "data-name": "bar",
+                    "contenteditable": "true"
+                },
+                "class": "windowHeading",
+                "innerText": "Heading"
+            }));
+
+            newWindow.appendChild(createElement({
+                "element": "textarea",
+                "attributes": {
+                    "data-name": "bar"
+                },
+                "class": "windowContent",
+                "innerText": "Content",
+            }));
+
+
+            document.getElementById("con").appendChild(newWindow);
+        }
+    </script>
 </body>
